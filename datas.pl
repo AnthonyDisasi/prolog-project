@@ -147,7 +147,7 @@ event(8, conflit_majeur, 0, 0).
 event(9, conflit_mineur, 0, 0).
 event(10, panne_courant, 0, 0).
 event(11, incendie, 0, 0).
-event(12, météorite, 0, 0).
+event(12, meteorite, 0, 0).
 event(13, chute_boursiere, 0, 0).
 event(14, attaque_terroriste, 0, 0).
 event(15, accident_voitures, 0, 0).
