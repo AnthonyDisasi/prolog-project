@@ -3,77 +3,77 @@
 product(id, name, suppliers [], quantity). 
 */
 
-product(1, alternateurT1, [1,2,3,4], 100).
+product(1, alternateurT1, [1,2,3,4,50], 100).
 product(2, alternateurT2, [1,2,3,4], 100).
 product(3, alternateurT3, [1,2,3,4], 100).
-product(4, alternateurT4, [1,2,3,4], 100).
+product(4, alternateurT4, [1,2,3,4,50], 100).
 product(5, alternateurT5, [1,2,3,4], 100).
 
-product(6, demarreurT1, [1,2,3,4], 100).
-product(7, demarreurT2, [1,2,3,4], 100).
-product(8, demarreurT3, [1,2,3,4], 100).
-product(9, demarreurT4, [1,2,3,4], 100).
-product(10, demarreurT5, [1,2,3,4], 100).
+product(6, demarreurT1, [6,7,8,9], 100).
+product(7, demarreurT2, [6,7,8,9,50], 100).
+product(8, demarreurT3, [6,7,8,9], 100).
+product(9, demarreurT4, [6,7,8,9], 100).
+product(10, demarreurT5, [6,7,8,9,50], 100).
 
-product(11, amortisseurT1, [1,2,3,4], 100).
-product(12, amortisseurT2, [1,2,3,4], 100).
-product(13, amortisseurT3, [1,2,3,4], 100).
-product(14, amortisseurT4, [1,2,3,4], 100).
-product(15, amortisseurT5, [1,2,3,4], 100).
+product(11, amortisseurT1, [10,11,12,13,50], 100).
+product(12, amortisseurT2, [10,11,12,13], 100).
+product(13, amortisseurT3, [10,11,12,13,50], 100).
+product(14, amortisseurT4, [10,11,12,13], 100).
+product(15, amortisseurT5, [10,11,12,13,50], 100).
 
-product(16, suspensionT1, [1,2,3,4], 100).
-product(17, suspensionT2, [1,2,3,4], 100).
-product(18, suspensionT3, [1,2,3,4], 100).
-product(19, suspensionT4, [1,2,3,4], 100).
-product(20, suspensionT5, [1,2,3,4], 100).
+product(16, suspensionT1, [14,15,16,17], 100).
+product(17, suspensionT2, [14,15,16,17,50], 100).
+product(18, suspensionT3, [14,15,16,17], 100).
+product(19, suspensionT4, [14,15,16,17,50], 100).
+product(20, suspensionT5, [14,15,16,17], 100).
 
-product(21, batterieT1, [1,2,3,4], 100).
-product(22, batterieT2, [1,2,3,4], 100).
-product(23, batterieT3, [1,2,3,4], 100).
-product(24, batterieT4, [1,2,3,4], 100).
-product(25, batterieT5, [1,2,3,4], 100).
+product(21, batterieT1, [18,19,20,21], 100).
+product(22, batterieT2, [18,19,20,21,50], 100).
+product(23, batterieT3, [18,19,20,21], 100).
+product(24, batterieT4, [18,19,20,21,50], 100).
+product(25, batterieT5, [18,19,20,21,50], 100).
 
-product(26, bougieT1, [1,2,3,4], 100).
-product(27, bougieT2, [1,2,3,4], 100).
-product(28, bougieT3, [1,2,3,4], 100).
-product(29, bougieT4, [1,2,3,4], 100).
-product(30, bougieT5, [1,2,3,4], 100).
+product(26, bougieT1, [22,23,24,25,50], 100).
+product(27, bougieT2, [22,23,24,25,50], 100).
+product(28, bougieT3, [22,23,24,25,50], 100).
+product(29, bougieT4, [22,23,24,25,50], 100).
+product(30, bougieT5, [22,23,24,25,50], 100).
 
-product(31, pneuT1, [1,2,3,4], 100).
-product(32, pneuT2, [1,2,3,4], 100).
-product(33, pneuT3, [1,2,3,4], 100).
-product(34, pneuT4, [1,2,3,4], 100).
-product(35, pneuT5, [1,2,3,4], 100).
+product(31, pneuT1, [26,27,28,29], 100).
+product(32, pneuT2, [26,27,28,29,50], 100).
+product(33, pneuT3, [26,27,28,29], 100).
+product(34, pneuT4, [26,27,28,29,50], 100).
+product(35, pneuT5, [26,27,28,29], 100).
 
-product(36, retroviseurT1, [1,2,3,4], 100).
-product(37, retroviseurT2, [1,2,3,4], 100).
-product(38, retroviseurT3, [1,2,3,4], 100).
-product(39, retroviseurT4, [1,2,3,4], 100).
-product(40, retroviseurT5, [1,2,3,4], 100).
+product(36, retroviseurT1, [30,31,32,33], 100).
+product(37, retroviseurT2, [30,31,32,33,50], 100).
+product(38, retroviseurT3, [30,31,32,33], 100).
+product(39, retroviseurT4, [30,31,32,33,50], 100).
+product(40, retroviseurT5, [30,31,32,33], 100).
 
-product(41, parebriseT1, [1,2,3,4], 100).
-product(42, parebriseT2, [1,2,3,4], 100).
-product(43, parebriseT3, [1,2,3,4], 100).
-product(44, parebriseT4, [1,2,3,4], 100).
-product(45, parebriseT5, [1,2,3,4], 100).
+product(41, parebriseT1, [34,35,36,37,50], 100).
+product(42, parebriseT2, [34,35,36,37], 100).
+product(43, parebriseT3, [34,35,36,37,50], 100).
+product(44, parebriseT4, [34,35,36,37], 100).
+product(45, parebriseT5, [34,35,36,37,50], 100).
 
-product(46, radiateurT1, [1,2,3,4], 100).
-product(47, radiateurT2, [1,2,3,4], 100).
-product(48, radiateurT3, [1,2,3,4], 100).
-product(49, radiateurT4, [1,2,3,4], 100).
-product(50, radiateurT5, [1,2,3,4], 100).
+product(46, radiateurT1, [38,39,40,41], 100).
+product(47, radiateurT2, [38,39,40,41,50], 100).
+product(48, radiateurT3, [38,39,40,41,50], 100).
+product(49, radiateurT4, [38,39,40,41], 100).
+product(50, radiateurT5, [38,39,40,41,50], 100).
 
-product(51, duriteT1, [1,2,3,4], 100).
-product(52, duriteT2, [1,2,3,4], 100).
-product(53, duriteT3, [1,2,3,4], 100).
-product(54, duriteT4, [1,2,3,4], 100).
-product(55, duriteT5, [1,2,3,4], 100).
+product(51, duriteT1, [42,43,44,45,50], 100).
+product(52, duriteT2, [42,43,44,45,50], 100).
+product(53, duriteT3, [42,43,44,45,50], 100).
+product(54, duriteT4, [42,43,44,45], 100).
+product(55, duriteT5, [42,43,44,45,50], 100).
 
-product(56, moteurT1, [1,2,3,4], 100).
-product(57, moteurT2, [1,2,3,4], 100).
-product(58, moteurT3, [1,2,3,4], 100).
-product(59, moteurT4, [1,2,3,4], 100).
-product(60, moteurT5, [1,2,3,4], 100).
+product(56, moteurT1, [46,47,48,49,50], 100).
+product(57, moteurT2, [46,47,48,49], 100).
+product(58, moteurT3, [46,47,48,49], 100).
+product(59, moteurT4, [46,47,48,49,50], 100).
+product(60, moteurT5, [46,47,48,49,50], 100).
 
 /*
 	Suppliers
