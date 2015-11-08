@@ -1,0 +1,3 @@
+/*
+    Prédicats de base
+*/
