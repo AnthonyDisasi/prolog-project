@@ -80,6 +80,7 @@ product(60, moteurT5, [46,47,48,49,50], 100).
 supplier(id, name, location []).
 */
 
+<<<<<<< HEAD
 supplier(1, abax, [0,0]).
 supplier(2, aspock, [0,0]).
 supplier(3, acimex, [0,0]).
@@ -130,6 +131,7 @@ supplier(47, sachs, [0,0]).
 supplier(48, sicli, [0,0]).
 supplier(49, siepa, [0,0]).
 supplier(50, sifam, [0,0]).
+
 
 /*
 	Events
