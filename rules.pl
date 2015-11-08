@@ -39,9 +39,37 @@ get_suppliers(ID_Product, List_suppliers):-
 /********** SUPPLIERS *************/
 
 /*
+	Getter Distance with supplier
+*/
 	distance(ID_Supplier, Distance):-
 		supplier(ID_Supplier, _, [Latitude_supplier|Longitude_supplier]),
 		Latitude is abs(Latitude_supplier-50),
 		Longitude is abs(Longitude_supplier-50),
+		Distance is Latitude + Longitude.
+
+/*
+	Creation suppliers tab
 */
+	suppliers_tab_init(List_suppliers):-
+		ID_Supplier is 1,
+		add_suppliers_rec(ID_Supplier,[],List_suppliers).
+
+	add_suppliers_rec(ID_Supplier,[],Supplier):-
+		supplier(ID_Supplier,_,_),
+		distance(ID_Supplier,Dist),
+		append(ID_Supplier,10,Tmp),
+		append(Tmp,Dist,Supplier),
+		ID_Supplier is ID_Supplier + 1,
+		add_suppliers_rec(ID_Supplier, List_suppliers,Supplier).
+
+	add_suppliers_rec(ID_Supplier,[List_suppliers_head|List_suppliers_tail],[List_suppliers_head|Supplier]):-
+		supplier(ID_Supplier,_,_),
+		distance(ID_Supplier,Dist),
+		append(ID_Supplier,10,Tmp),
+		append(Tmp,Dist,Supplier),
+		ID_Supplier is ID_Supplier + 1,
+		add_suppliers_rec(ID_Supplier, List_suppliers_tail,Supplier).
+
+add_tail([],X,[X]).
+add_tail([H|T],X,[H|L]):-add_tail(T,X,L).
 		
