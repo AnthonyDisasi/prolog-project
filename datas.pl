@@ -80,8 +80,8 @@ product(60, moteurT5, [46,47,48,49,50], 100).
 supplier(id, name, location []).
 */
 
-supplier(1, Abax, [0,0]).
-supplier(2, Aspock, [0,0]).
+supplier(1, Abax, [55,55]).
+supplier(2, Aspock, [40,40]).
 supplier(3, Acimex, [0,0]).
 supplier(4, Bardhal, [0,0]).
 supplier(5, Bendix, [0,0]).
