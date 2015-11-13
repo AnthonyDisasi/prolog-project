@@ -3,6 +3,10 @@
 product(id, name, suppliers [], quantity). 
 */
 
+:- dynamic(product/4).
+:- dynamic(supplier/3).
+:- dynamic(event/4).
+
 product(1, alternateurT1, [1,2,3,4,50], 100).
 product(2, alternateurT2, [1,2,3,4], 100).
 product(3, alternateurT3, [1,2,3,4], 100).
@@ -80,7 +84,6 @@ product(60, moteurT5, [46,47,48,49,50], 100).
 supplier(id, name, location []).
 */
 
-<<<<<<< HEAD
 supplier(1, abax, [0,0]).
 supplier(2, aspock, [0,0]).
 supplier(3, acimex, [0,0]).

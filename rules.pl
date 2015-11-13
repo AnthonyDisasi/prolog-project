@@ -19,8 +19,8 @@ info_product(ID_Product):-
 	Affichage de tout les produits
 */
 
-info_all_products():-
-	forall(product(ID,_,_,_),info_product(ID)).
+info_all_products :-
+	forall(product(ID,_,_,_), info_product(ID)).
 
 /*
 	Getter Quantity
@@ -72,4 +72,18 @@ get_suppliers(ID_Product, List_suppliers):-
 
 add_tail([],X,[X]).
 add_tail([H|T],X,[H|L]):-add_tail(T,X,L).
+		
+/*
+    SETTERS
+*/
+
+set_product_quantity(IdProduct, NewQuantity):-
+    retract(product(IdProduct, Name, Suppliers, Quantity)),
+    asserta(product(IdProduct, Name, Suppliers, NewQuantity)).
+
+
+
+
+
+
 		
