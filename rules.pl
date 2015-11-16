@@ -78,12 +78,54 @@ add_tail([H|T],X,[H|L]):-add_tail(T,X,L).
 */
 
 set_product_quantity(IdProduct, NewQuantity):-
-    retract(product(IdProduct, Name, Suppliers, Quantity)),
+    retract(product(IdProduct, Name, Suppliers, _)),
     asserta(product(IdProduct, Name, Suppliers, NewQuantity)).
 
+/*
+    GUI Predicates
+*/
 
+add_into_list([], L, [L]).
+add_into_list(X, L, [X|L]).
 
+:- dynamic(listTmp/2).
 
+get_products_for_view(EmptyList,ListString) :-
+    asserta(listTmp(1,EmptyList)),
+    forall(
+	    product(IdProduct ,Name, _, Quantity),
+	    (
+	        atomic_concat('[',IdProduct, A),
+	        atomic_concat(A,'] ', B),
+	        atomic_concat(B, Name, C),
+	        atomic_concat(C,' - (Quantity = ', D),
+	        atomic_concat(D, Quantity, E),
+	        atomic_concat(E,')', String),
+            retract(listTmp(1, List)),
+            add_into_list(List, String, Return),
+            asserta(listTmp(1, Return))
+	    )
+	),
+	retract(listTmp(1,ListString)).
+
+get_suppliers_for_view(EmptyList,ListString) :-
+    asserta(listTmp(2,EmptyList)),
+    forall(
+	    supplier(IdSupplier ,Name, Products),
+	    (
+	        atomic_concat('[',IdSupplier, A),
+	        atomic_concat(A,'] ', B),
+	        atomic_concat(B, Name, C),
+	        atomic_concat(C,' - (Coordinates = [', D),
+	        atomic_list_concat(Products,', ', Atom),
+	        atomic_concat(D, Atom, E),
+	        atomic_concat(E,'])', String),
+            retract(listTmp(2, List)),
+            add_into_list(List, String, Return),
+            asserta(listTmp(2, Return))
+	    )
+	),
+	retract(listTmp(2,ListString)).
 
 
 		
