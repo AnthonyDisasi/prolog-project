@@ -155,4 +155,19 @@ get_events_for_view_rec(EmptyList,ListString) :-
 	    )
 	),
 	retract(listTmp(2,ListString)).
-		
+
+/*
+    Day Plus One Function
+*/
+
+day_plus_one(Integer) :-
+
+    retract(context(OldNumDay)),
+    NewNumDay is OldNumDay + 1,
+    asserta(context(NewNumDay)),
+    write('Changement de jour: '),write(NewNumDay),
+    nl.
+    /*
+    send(Resultat,selection, NewNumDay).
+    atomic_concat('Jour ',Integer,StringDay).
+    */

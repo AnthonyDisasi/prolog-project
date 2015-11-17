@@ -6,13 +6,15 @@
 */
 
 start :-
+        set_context,
 		new(D, dialog('Prolog Project')),
-    	send(D, append, new(Resultat, text('Bienvenue !'))),
-        send(Resultat, colour, black),
-    	send(Resultat, font, font(times, bold, 18)),
+    	send(D, append, new(StringDay, label(''))),
+    	send(StringDay, colour, black),
+        send(StringDay, font, font(times, bold, 18)),
     	send(D, append, button(products, message(@prolog, open_products_list))),
     	send(D, append, button(suppliers, message(@prolog, open_suppliers_list))),
     	send(D, append, button(events, message(@prolog, open_events_list))),
+    	send(D, append, button(day_plus_one, message(@prolog, day_plus_one, StringDay))),
     	send(D, append, button(close_window, message(D, destroy))),
     	send(D, open).
 
@@ -55,3 +57,17 @@ open_events_list :-
         send_list(B, append, List),
         send(B, size, size(50,100)),
     	send(B, open).
+
+/*
+    Set Initial Context
+*/
+
+:- dynamic(context/1).
+
+set_context:-
+    consult(datas),
+    consult(rules),
+    asserta(context(0)).
+
+
+
