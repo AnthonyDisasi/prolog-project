@@ -24,8 +24,9 @@ open_products_list :-
         consult(datas),
         consult(rules),
     	new(B, browser('List')),
-    	get_products_for_view([],List),
+    	get_products_for_view(List),
         send_list(B, append, List),
+        send(B, size, size(50,100)),
     	send(B, open).
 
 
@@ -37,8 +38,9 @@ open_suppliers_list :-
         consult(datas),
         consult(rules),
     	new(B, browser('List')),
-    	get_suppliers_for_view([],List),
+    	get_suppliers_for_view(List),
         send_list(B, append, List),
+        send(B, size, size(50,100)),
     	send(B, open).
 
 /*
@@ -49,6 +51,7 @@ open_events_list :-
         consult(datas),
         consult(rules),
     	new(B, browser('List')),
-    	get_events_for_view([],List),
+    	get_events_for_view(List),
         send_list(B, append, List),
+        send(B, size, size(50,100)),
     	send(B, open).

@@ -4,7 +4,7 @@ product(id, name, suppliers [], quantity).
 */
 
 :- dynamic(product/4).
-:- dynamic(supplier/3).
+:- dynamic(supplier/4).
 :- dynamic(event/4).
 
 product(1, alternateurT1, [1,2,3,4,50], 100).
@@ -81,59 +81,59 @@ product(60, moteurT5, [46,47,48,49,50], 100).
 
 /*
 	Suppliers
-supplier(id, name, location []).
+supplier(id, name, location [], mark).
 */
 
-supplier(1, abax, [0,0]).
-supplier(2, aspock, [0,0]).
-supplier(3, acimex, [0,0]).
-supplier(4, bardhal, [0,0]).
-supplier(5, bendix, [0,0]).
-supplier(6, brink, [0,0]).
-supplier(7, champion, [0,0]).
-supplier(8, cipa, [0,0]).
-supplier(9, colaert, [0,0]).
-supplier(10, denso, [0,0]).
-supplier(11, diframa, [0,0]).
-supplier(12, doga, [0,0]).
-supplier(13, electrifil, [0,0]).
-supplier(14, eram, [0,0]).
-supplier(15, faab, [0,0]).
-supplier(16, ferodo, [0,0]).
-supplier(17, fichet, [0,0]).
-supplier(18, francefix, [0,0]).
-supplier(19, gabriel, [0,0]).
-supplier(20, gys, [0,0]).
-supplier(21, haacon, [0,0]).
-supplier(22, haldex, [0,0]).
-supplier(23, hitachi, [0,0]).
-supplier(24, iskra, [0,0]).
-supplier(25, jonesco, [0,0]).
-supplier(26, jost, [0,0]).
-supplier(27, klaxcar, [0,0]).
-supplier(28, knorr, [0,0]).
-supplier(29, loni, [0,0]).
-supplier(30, lumho, [0,0]).
-supplier(31, lecoy, [0,0]).
-supplier(32, lugdunum, [0,0]).
-supplier(33, luk, [0,0]).
-supplier(34, meiwa, [0,0]).
-supplier(35, mekra, [0,0]).
-supplier(36, mga, [0,0]).
-supplier(37, muller, [0,0]).
-supplier(38, netman, [0,0]).
-supplier(39, ngk, [0,0]).
-supplier(40, norton, [0,0]).
-supplier(41, osram, [0,0]).
-supplier(42, promauto, [0,0]).
-supplier(43, raufoss, [0,0]).
-supplier(44, ringfeder, [0,0]).
-supplier(45, rockinger, [0,0]).
-supplier(46, rubbolite, [0,0]).
-supplier(47, sachs, [0,0]).
-supplier(48, sicli, [0,0]).
-supplier(49, siepa, [0,0]).
-supplier(50, sifam, [0,0]).
+supplier(1, abax, [0,0], 10).
+supplier(2, aspock, [0,0], 10).
+supplier(3, acimex, [0,0], 10).
+supplier(4, bardhal, [0,0], 10).
+supplier(5, bendix, [0,0], 10).
+supplier(6, brink, [0,0], 10).
+supplier(7, champion, [0,0], 10).
+supplier(8, cipa, [0,0], 10).
+supplier(9, colaert, [0,0], 10).
+supplier(10, denso, [0,0], 10).
+supplier(11, diframa, [0,0], 10).
+supplier(12, doga, [0,0], 10).
+supplier(13, electrifil, [0,0], 10).
+supplier(14, eram, [0,0], 10).
+supplier(15, faab, [0,0], 10).
+supplier(16, ferodo, [0,0], 10).
+supplier(17, fichet, [0,0], 10).
+supplier(18, francefix, [0,0], 10).
+supplier(19, gabriel, [0,0], 10).
+supplier(20, gys, [0,0], 10).
+supplier(21, haacon, [0,0], 10).
+supplier(22, haldex, [0,0], 10).
+supplier(23, hitachi, [0,0], 10).
+supplier(24, iskra, [0,0], 10).
+supplier(25, jonesco, [0,0], 10).
+supplier(26, jost, [0,0], 10).
+supplier(27, klaxcar, [0,0], 10).
+supplier(28, knorr, [0,0], 10).
+supplier(29, loni, [0,0], 10).
+supplier(30, lumho, [0,0], 10).
+supplier(31, lecoy, [0,0], 10).
+supplier(32, lugdunum, [0,0], 10).
+supplier(33, luk, [0,0], 10).
+supplier(34, meiwa, [0,0], 10).
+supplier(35, mekra, [0,0], 10).
+supplier(36, mga, [0,0], 10).
+supplier(37, muller, [0,0], 10).
+supplier(38, netman, [0,0], 10).
+supplier(39, ngk, [0,0], 10).
+supplier(40, norton, [0,0], 10).
+supplier(41, osram, [0,0], 10).
+supplier(42, promauto, [0,0], 10).
+supplier(43, raufoss, [0,0], 10).
+supplier(44, ringfeder, [0,0], 10).
+supplier(45, rockinger, [0,0], 10).
+supplier(46, rubbolite, [0,0], 10).
+supplier(47, sachs, [0,0], 10).
+supplier(48, sicli, [0,0], 10).
+supplier(49, siepa, [0,0], 10).
+supplier(50, sifam, [0,0], 10).
 
 
 /*

@@ -90,7 +90,10 @@ add_into_list(X, L, [X|L]).
 
 :- dynamic(listTmp/2).
 
-get_products_for_view(EmptyList,ListString) :-
+get_products_for_view(ListString) :-
+    get_products_for_view_rec([],ListString).
+
+get_products_for_view_rec(EmptyList,ListString) :-
     asserta(listTmp(1,EmptyList)),
     forall(
 	    product(IdProduct ,Name, _, Quantity),
@@ -108,10 +111,13 @@ get_products_for_view(EmptyList,ListString) :-
 	),
 	retract(listTmp(1,ListString)).
 
-get_suppliers_for_view(EmptyList,ListString) :-
+get_suppliers_for_view(ListString) :-
+    get_suppliers_for_view_rec([],ListString).
+
+get_suppliers_for_view_rec(EmptyList,ListString) :-
     asserta(listTmp(2,EmptyList)),
     forall(
-	    supplier(IdSupplier ,Name, Products),
+	    supplier(IdSupplier ,Name, Products, _),
 	    (
 	        atomic_concat('[',IdSupplier, A),
 	        atomic_concat(A,'] ', B),
@@ -127,7 +133,10 @@ get_suppliers_for_view(EmptyList,ListString) :-
 	),
 	retract(listTmp(2,ListString)).
 
-get_events_for_view(EmptyList,ListString) :-
+get_events_for_view(ListString) :-
+    get_events_for_view_rec([],ListString).
+
+get_events_for_view_rec(EmptyList,ListString) :-
     asserta(listTmp(2,EmptyList)),
     forall(
 	    event(IdEvent ,Name, Impact, Radius),
