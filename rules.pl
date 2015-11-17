@@ -127,5 +127,23 @@ get_suppliers_for_view(EmptyList,ListString) :-
 	),
 	retract(listTmp(2,ListString)).
 
-
+get_events_for_view(EmptyList,ListString) :-
+    asserta(listTmp(2,EmptyList)),
+    forall(
+	    event(IdEvent ,Name, Impact, Radius),
+	    (
+	        atomic_concat('[',IdEvent, A),
+	        atomic_concat(A,'] ', B),
+	        atomic_concat(B, Name, C),
+	        atomic_concat(C,' - Impact = [', D),
+	        atomic_concat(D, Impact, E),
+	        atomic_concat(E,'] - Radius = [', F),
+	        atomic_concat(F, Radius, G),
+	        atomic_concat(G,']', String),
+            retract(listTmp(2, List)),
+            add_into_list(List, String, Return),
+            asserta(listTmp(2, Return))
+	    )
+	),
+	retract(listTmp(2,ListString)).
 		

@@ -12,7 +12,7 @@ start :-
     	send(Resultat, font, font(times, bold, 18)),
     	send(D, append, button(products, message(@prolog, open_products_list))),
     	send(D, append, button(suppliers, message(@prolog, open_suppliers_list))),
-    	send(D, append, button(events, message(D, destroy))),
+    	send(D, append, button(events, message(@prolog, open_events_list))),
     	send(D, append, button(close_window, message(D, destroy))),
     	send(D, open).
 
@@ -38,5 +38,17 @@ open_suppliers_list :-
         consult(rules),
     	new(B, browser('List')),
     	get_suppliers_for_view([],List),
+        send_list(B, append, List),
+    	send(B, open).
+
+/*
+    Open Events List Window
+*/
+
+open_events_list :-
+        consult(datas),
+        consult(rules),
+    	new(B, browser('List')),
+    	get_events_for_view([],List),
         send_list(B, append, List),
     	send(B, open).
