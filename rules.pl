@@ -261,6 +261,9 @@ product_availability(IdProduct,QuantityAsked):-
 
 %replenishment(ID_Product):-!.
 
+
+/**********************EVENT******************************/
+
 impact_event(Latitude,Longitude,IdEvent):-
 	event(IdEvent,NameEvent,Impact,Radius),
 	write('Evenement : '),write(NameEvent),nl,
@@ -301,10 +304,11 @@ impact_delivery(IdDelivery,Impact):-
 	NewTime is Time + Impact,
 	set_delivery_time(IdDelivery,NewTime),
 	write('La commande N° '),write(IdDelivery),write(' a été impacté par l évènement.'),nl,
-	%Choix supplier
 	write('Elle sera retardé de '), write(Impact), write(" Jours."),nl.
-	%Création commande
-	%affichage commande
+
+
+/*********************DELIVERY**************************/
+
 
 display_delivery(IdDelivery):-
 	delivery(IdDelivery,IdSupplier,IdProduct,Quantity,_,_,Time),
@@ -317,6 +321,8 @@ display_delivery(IdDelivery):-
 	write('\t'),write('Temps d acheminement restant : '),write(Time),nl.
 
 
+
+
 advancement_deliveries:-
 	forall(delivery(IdDelivery,_,_,_,_,_,_),
 		(move_delivery(IdDelivery),
@@ -327,11 +333,47 @@ advancement_deliveries:-
 			write('Le stock de produit  '),write(NameProduct),write(' est maintenant de '), write(Quantity),nl;!)).
 
 move_delivery(IdDelivery):-
-	delivery(IdDelivery,_,_,_,_,_,Time),
+	delivery(IdDelivery,_,_,_,Latitude,_,Time),
 	(Time > 5,!,
 		NewTime is Time - 5;
 		NewTime is 0),
-	set_delivery_time(IdDelivery,NewTime).
+	set_delivery_time(IdDelivery,NewTime),
+	(Latitude = 50
+	->change_longitude(IdDelivery, 5);
+	change_latitude(IdDelivery,5)).
+
+change_latitude(IdDelivery, Movement):-
+	delivery(IdDelivery,_,_,_,Latitude,_,_),
+	(Latitude > 45, Latitude < 55
+		->
+		MovementOnLongitude is Movement - abs(Latitude - 50),
+		NewLatitude is 50,
+		set_delivery_latitude(IdDelivery,NewLatitude),
+		change_longitude(IdDelivery,MovementOnLongitude);
+	Latitude < 50
+		->
+		NewLatitude is Latitude + Movement,
+		set_delivery_latitude(IdDelivery,NewLatitude);
+	Latitude > 50
+		->
+		NewLatitude is Latitude - Movement,
+		set_delivery_latitude(IdDelivery,NewLatitude);!).
+
+change_longitude(IdDelivery, Movement):-
+	delivery(IdDelivery,_,_,_,_,Longitude,_),
+	(Longitude > 45, Longitude < 55
+		->
+		NewLongitude is 50,
+		set_delivery_longitude(IdDelivery,NewLongitude);
+	Longitude < 50
+		->
+		NewLongitude is Longitude + Movement,
+		set_delivery_longitude(IdDelivery,NewLongitude);
+	Longitude > 50
+		->
+		NewLongitude is Longitude - Movement,
+		set_delivery_longitude(IdDelivery,NewLongitude);!).
+
 
 delivery_made(IdDelivery):-
 	delivery(IdDelivery,_,Idproduct,QuantityDelivered,_,_,_),
@@ -339,6 +381,14 @@ delivery_made(IdDelivery):-
 	NewQuantity is QuantityDelivered + ProductQuantity,
 	set_product_quantity(Idproduct,NewQuantity),
 	retract(delivery(IdDelivery,_,_,_,_,_,_)).
+
+set_delivery_latitude(IdDelivery,Latitude):-
+	retract(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,_,Longitude,Time)),
+	asserta(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,Longitude,Time)).
+
+set_delivery_longitude(IdDelivery,Longitude):-
+	retract(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,_,Time)),
+	asserta(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,Longitude,Time)).	
 
 set_delivery_time(IdDelivery,Time):-
 	retract(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,Longitude,_)),
