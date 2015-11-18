@@ -37,8 +37,6 @@ set_context:-
 */
 
 open_products_list :-
-        consult(datas),
-        consult(rules),
     	new(B, browser('List')),
     	get_products_for_view(List),
         send_list(B, append, List),
@@ -51,8 +49,6 @@ open_products_list :-
 */
 
 open_suppliers_list :-
-        consult(datas),
-        consult(rules),
     	new(B, browser('List')),
     	get_suppliers_for_view(List),
         send_list(B, append, List),
@@ -64,8 +60,6 @@ open_suppliers_list :-
 */
 
 open_events_list :-
-        consult(datas),
-        consult(rules),
     	new(B, browser('List')),
     	get_events_for_view(List),
         send_list(B, append, List),

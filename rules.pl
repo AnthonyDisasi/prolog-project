@@ -140,8 +140,10 @@ get_events_for_view_rec(EmptyList,ListString) :-
 
 day_plus_one :-
     set_new_day,
-    random_order(IdProduct,Quantity),
-    random_event(IdEvent, AxisX, AxisY),
+    %delevery_check,
+    %daily_event,
+    %check_waiting_list
+    daily_order,
     write('--------------------------------------'),
     nl.
 
@@ -156,16 +158,86 @@ set_new_day :-
     write('Changement de jour: '),write(NewNumDay),
     nl.
 
+
+
+
+
+/*
+    Random order + if stock is ok then decrease stock else addition in waiting_list + Best supplier research + create new delivery
+*/
+
+:- dynamic(supplierTmp/3).
+
+daily_order :-
+    random_order(IdProduct,Quantity),
+    product(IdProduct, _, _, ActualQuantity),
+    (
+        product_availability(IdProduct, Quantity)
+        ->
+        NewQuantity is ActualQuantity - Quantity,
+        set_product_quantity(IdProduct,NewQuantity),
+        write('Stock suffisant, décrémentation du stock.'),nl
+        ;
+        add_into_waiting_list(IdProduct,Quantity)
+    ),
+    find_best_supplier(IdProduct,IdSupplier).
+
+find_best_supplier(IdProduct,IdSupplier):-
+    product(IdProduct, _, SupplierList, _),
+    get_best_supplier(SupplierList, IdSupplier),
+    supplier(IdSupplier, Name, _, _),
+    write('Le fournisseur "['),write(IdSupplier),write('] '),write(Name),write('" a été choisi pour cette commande.'),nl.
+
+get_best_supplier([X|L],IdSupplier):-
+    supplier_mark_calcul(X,Mark),
+    asserta(supplierTmp(1,X,Mark)),
+    get_best_supplier_rec(L,IdSupplier),
+    retract(supplierTmp(1,_,_)).
+
+get_best_supplier_rec([],IdSupplier):-
+    supplierTmp(1,IdSupplier,_).
+
+get_best_supplier_rec([X|L],IdSupplier):-
+    supplier_mark_calcul(X,Mark),
+    supplierTmp(1, _, MarkTmp),
+    (
+        Mark > MarkTmp
+        ->
+        retract(supplierTmp(1,_,_)),
+        asserta(supplierTmp(1, X, Mark));
+        !
+    ),
+    get_best_supplier_rec(L,IdSupplier).
+
+
+supplier_mark_calcul(IdSupplier, Mark):-
+    supplier(IdSupplier, _, _, FiabilityMark),
+    supplier(IdSupplier,_,[X|Else],_),
+    Y is Else,
+    distance(50,50,X,Y,Distance),
+    DeliveryMark is 100 - Distance,
+    Mark is FiabilityMark*10 + DeliveryMark.
+
+
+:- dynamic(waiting_list/3).
+add_into_waiting_list(IdProduct,Quantity):-
+    asserta(waiting_list(IdProduct,Quantity,0)),
+    write('Stock insuffisant, mise en attente de la commande'),nl.
+
+
+
+
 /*
     Random predicates
         (1) random_order --> Idproduct [1-60], Quantity [20-80]
         (2) random_event --> IdEvent [1-20], AxisX [0-100], AxisY [0-100]
 */
 
-random_order(IdProduct, Quantity):-
+random_order(IdProduct, Quantity) :-
     random(1,61,IdProduct),
     random(20,81,Quantity),
-    write('Commande du produit '),write(IdProduct), write(' [Qté: '), write(Quantity),write(']'),nl.
+    product(IdProduct,Name,_,_),
+    write('Commande du produit "['),write(IdProduct),write('] '),write(Name),write('" pour une quantité de '), write(Quantity),write('.'),nl.
 
 random_event(IdEvent, AxisX, AxisY):-
     random(1,21,IdEvent),
@@ -185,7 +257,7 @@ random_product(ID_Product, Quantity):-
 
 product_availability(IdProduct,QuantityAsked):-
 	product(IdProduct,_,_,Quantity),
-	Quantity > QuantityAsked.
+	QuantityAsked =< Quantity.
 
 %replenishment(ID_Product):-!.
 

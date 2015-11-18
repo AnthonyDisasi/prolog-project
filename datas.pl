@@ -103,7 +103,7 @@ supplier(13, electrifil, [83,27], 10).
 supplier(14, eram, [37,65], 10).
 supplier(15, faab, [19,82], 10).
 supplier(16, ferodo, [70,78], 10).
-supplier(17, fichet, [52,75], 10).
+supplier(17, fichet, [62,75], 10).
 supplier(18, francefix, [18,45], 10).
 supplier(19, gabriel, [84,4], 10).
 supplier(20, gys, [53,92], 10).
@@ -136,7 +136,7 @@ supplier(46, rubbolite, [24,5], 10).
 supplier(47, sachs, [87,70], 10).
 supplier(48, sicli, [67,7], 10).
 supplier(49, siepa, [46,42], 10).
-supplier(50, sifam, [55,80], 10).
+supplier(50, sifam, [99,90], 10).
 
 
 /*
