@@ -160,14 +160,41 @@ get_events_for_view_rec(EmptyList,ListString) :-
     Day Plus One Function
 */
 
-day_plus_one(Integer) :-
+day_plus_one :-
+    set_new_day,
+    random_order(IdProduct,Quantity),
+    random_event(IdEvent, AxisX, AxisY).
 
+
+    /*
+    send(Resultat,selection, NewNumDay).
+    atomic_concat('Jour ',Integer,StringDay).
+    */
+
+/*
+    Days Management
+*/
+
+set_new_day :-
     retract(context(OldNumDay)),
     NewNumDay is OldNumDay + 1,
     asserta(context(NewNumDay)),
     write('Changement de jour: '),write(NewNumDay),
     nl.
-    /*
-    send(Resultat,selection, NewNumDay).
-    atomic_concat('Jour ',Integer,StringDay).
-    */
+
+/*
+    Random predicates
+        (1) random_order --> Idproduct [1-60], Quantity [20-80]
+        (2) random_event --> IdEvent [1-20], AxisX [0-100], AxisY [0-100]
+*/
+
+random_order(IdProduct, Quantity):-
+    random(1,61,IdProduct),
+    random(20,81,Quantity),
+    write('Commande du produit '),write(IdProduct), write(' [Qté: '), write(Quantity),write(']'),nl.
+
+random_event(IdEvent, AxisX, AxisY):-
+    random(1,21,IdEvent),
+    random(0,101,AxisX),
+    random(0,101,AxisY),
+    write('Evenement "'),write(IdEvent),write('" est arrivé aux coordonnées ['),write(AxisX),write(','),write(AxisY),write(']'),nl.

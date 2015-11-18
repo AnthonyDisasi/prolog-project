@@ -14,9 +14,23 @@ start :-
     	send(D, append, button(products, message(@prolog, open_products_list))),
     	send(D, append, button(suppliers, message(@prolog, open_suppliers_list))),
     	send(D, append, button(events, message(@prolog, open_events_list))),
-    	send(D, append, button(day_plus_one, message(@prolog, day_plus_one, StringDay))),
+    	send(D, append, button(day_plus_one, message(@prolog, day_plus_one))),
     	send(D, append, button(close_window, message(D, destroy))),
     	send(D, open).
+
+
+/*
+    Set Initial Context
+        Arguments:
+            (1) Day Numero
+*/
+
+:- dynamic(context/1).
+
+set_context:-
+    consult(datas),
+    consult(rules),
+    asserta(context(0)).
 
 /*
     Open Products List Window
@@ -57,17 +71,6 @@ open_events_list :-
         send_list(B, append, List),
         send(B, size, size(50,100)),
     	send(B, open).
-
-/*
-    Set Initial Context
-*/
-
-:- dynamic(context/1).
-
-set_context:-
-    consult(datas),
-    consult(rules),
-    asserta(context(0)).
 
 
 
