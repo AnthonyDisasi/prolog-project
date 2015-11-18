@@ -1,11 +1,14 @@
-/* 
-	Products 
-product(id, name, suppliers [], quantity). 
-*/
+
 
 :- dynamic(product/4).
 :- dynamic(supplier/4).
 :- dynamic(event/4).
+:- dynamic(delivery/7).
+
+/* 
+	Products 
+product(id, name, suppliers [], quantity). 
+*/
 
 product(1, alternateurT1, [1,2,3,4,50], 100).
 product(2, alternateurT2, [1,2,3,4], 100).
@@ -161,3 +164,12 @@ event(17, augmentation_taxes, 2, 35).
 event(18, braquage, 3, 10).
 event(19, scandale_pollution, 3, 12).
 event(20, bouchons, 1, 10).
+
+
+/*
+	Delivery
+delivery(id, idSupplier, idProduct, Quantity, latitude, longitude,time).
+*/
+
+delivery(1,1,1,20,1,1,3).
+
