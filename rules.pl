@@ -163,13 +163,9 @@ get_events_for_view_rec(EmptyList,ListString) :-
 day_plus_one :-
     set_new_day,
     random_order(IdProduct,Quantity),
-    random_event(IdEvent, AxisX, AxisY).
-
-
-    /*
-    send(Resultat,selection, NewNumDay).
-    atomic_concat('Jour ',Integer,StringDay).
-    */
+    random_event(IdEvent, AxisX, AxisY),
+    write('--------------------------------------'),
+    nl.
 
 /*
     Days Management
@@ -197,4 +193,5 @@ random_event(IdEvent, AxisX, AxisY):-
     random(1,21,IdEvent),
     random(0,101,AxisX),
     random(0,101,AxisY),
-    write('Evenement "'),write(IdEvent),write('" est arrivé aux coordonnées ['),write(AxisX),write(','),write(AxisY),write(']'),nl.
+    event(IdEvent,NameEvent,_,_),
+    write('Evenement "'),write(NameEvent),write('" est arrivé aux coordonnées ['),write(AxisX),write(','),write(AxisY),write(']'),nl.
