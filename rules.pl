@@ -273,7 +273,7 @@ impact_event(Latitude,Longitude,IdEvent):-
 	 			impact_supplier(IdSupplier,Impact);!)),
 	forall(delivery(IdDelivery,_,_,_,_,_,_),
 			(delivery_impacted_by_event(Latitude,Longitude,IdEvent,IdDelivery),!,
-	 			impact_delivery(IdDelivery);!)).
+	 			impact_delivery(IdDelivery,Impact);!)).
 
 supplier_impacted_by_event(LatitudeEvent,LongitudeEvent,IdEvent,IdSupplier):-
 	supplier(IdSupplier,_,[LatitudeSupplier|LongitudeSupp],_),
@@ -296,11 +296,13 @@ impact_supplier(IdSupplier,Impact):-
 		NewMark is 0),
 	set_supplier_mark(IdSupplier,NewMark).
 
-impact_delivery(IdDelivery):-
-	retract(delivery(IdDelivery,_,IdProduct,Quantity,_,_,_)),
+impact_delivery(IdDelivery,Impact):-
+	delivery(IdDelivery,_,_,_,_,_,Time),
+	NewTime is Time + Impact,
+	set_delivery_time(IdDelivery,NewTime),
 	write('La commande N° '),write(IdDelivery),write(' a été impacté par l évènement.'),nl,
 	%Choix supplier
-	write('Relance de la commande aupres du fournisseur').
+	write('Elle sera retardé de '), write(Impact), write(" Jours."),nl.
 	%Création commande
 	%affichage commande
 
@@ -314,3 +316,45 @@ display_delivery(IdDelivery):-
 	write('\t'),write('Fournisseur : '),write(NameSupplier),nl,
 	write('\t'),write('Temps d acheminement restant : '),write(Time),nl.
 
+
+advancement_deliveries:-
+	forall(delivery(IdDelivery,_,_,_,_,_,_),
+		(move_delivery(IdDelivery),
+		delivery(IdDelivery,_,IdProduct,_,_,_,0),!,
+			delivery_made(IdDelivery),
+			write('La livraison N° '),write(IdDelivery),write(' est arrivé.'),nl,
+			product(IdProduct,NameProduct,_,Quantity),
+			write('Le stock de produit  '),write(NameProduct),write(' est maintenant de '), write(Quantity),nl;!)).
+
+move_delivery(IdDelivery):-
+	delivery(IdDelivery,_,_,_,_,_,Time),
+	(Time > 5,!,
+		NewTime is Time - 5;
+		NewTime is 0),
+	set_delivery_time(IdDelivery,NewTime).
+
+delivery_made(IdDelivery):-
+	delivery(IdDelivery,_,Idproduct,QuantityDelivered,_,_,_),
+	get_quantity(Idproduct,ProductQuantity),
+	NewQuantity is QuantityDelivered + ProductQuantity,
+	set_product_quantity(Idproduct,NewQuantity),
+	retract(delivery(IdDelivery,_,_,_,_,_,_)).
+
+set_delivery_time(IdDelivery,Time):-
+	retract(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,Longitude,_)),
+	asserta(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,Longitude,Time)).
+
+create_delivery(IdProduct,Quantity,IdSupplier):-
+	supplier(IdSupplier,NameSupplier,[LatitudeSupplier|LongitudeSupp],_),
+	LongitudeSupplier is LongitudeSupp,
+	product(IdProduct,NameProduct,_,_),
+	distance(50,50,LatitudeSupplier,LongitudeSupplier,Dist),
+	retract(nbr_deliveries_sent(Nbr)),
+	NewNbr is Nbr + 1,
+	asserta(nbr_deliveries_sent(NewNbr)),
+	asserta(delivery(NewNbr,IdSupplier,IdProduct,Quantity,LatitudeSupplier,LongitudeSupplier,Dist)),
+	write('Création d une nouvelle commande'),
+	write('\t'),write('Libelle du produit : '),write(NameProduct),nl,
+	write('\t'),write('Quantite : '),write(Quantity),nl,
+	write('\t'),write('Fournisseur : '),write(NameSupplier),nl,
+	write('\t'),write('Temps d acheminement restant : '),write(Dist),nl.

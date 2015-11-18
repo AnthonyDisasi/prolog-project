@@ -4,7 +4,7 @@
 :- dynamic(supplier/4).
 :- dynamic(event/4).
 :- dynamic(delivery/7).
-
+:- dynamic(nbr_deliveries_sent/1).
 /* 
 	Products 
 product(id, name, suppliers [], quantity). 
@@ -171,5 +171,7 @@ event(20, bouchons, 1, 10).
 delivery(id, idSupplier, idProduct, Quantity, latitude, longitude,time).
 */
 
-delivery(1,1,1,20,1,1,3).
+%delivery(1,1,1,20,1,1,3).
+
+nbr_deliveries_sent(0).
 
