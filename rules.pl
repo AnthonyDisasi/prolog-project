@@ -1,6 +1,12 @@
+:- dynamic(waiting_order/3).
+:- dynamic(is_empty_waiting_list/2).
+:- dynamic(listTmp/2).
+:- dynamic(supplierTmp/3).
+
 /*
     Prédicats de base
 */
+
 
 /********** PRODUCTS *************/
 
@@ -66,7 +72,6 @@ set_supplier_mark(IdSupplier, Mark):-
 add_into_list([], L, [L]).
 add_into_list(X, L, [X|L]).
 
-:- dynamic(listTmp/2).
 
 get_products_for_view(ListString) :-
     get_products_for_view_rec([],ListString).
@@ -142,8 +147,8 @@ day_plus_one :-
     set_new_day,
     %delevery_check,
     %daily_event,
-    %check_waiting_list
     daily_order,
+    check_waiting_list,
     write('--------------------------------------'),
     nl.
 
@@ -158,15 +163,52 @@ set_new_day :-
     write('Changement de jour: '),write(NewNumDay),
     nl.
 
-
-
-
-
 /*
-    Random order + if stock is ok then decrease stock else addition in waiting_list + Best supplier research + create new delivery
+    Check waiting list
+*/
+check_waiting_list:-
+    (
+    waiting_order(_,_,_)
+    ->
+    write('Vérification des "commandes clients" en attentes.'),nl,check_waiting_list_rec
+    ;
+    write('Aucune "commande client" en attente.'),nl
+    ).
+
+
+check_waiting_list_rec:-
+    forall(
+        waiting_order(IdProduct,Quantity,NbrDays),
+        (
+            (
+            product_availability(IdProduct, Quantity)
+            ->
+            product(IdProduct, Name, _, ActualQuantity),
+            NewQuantity is ActualQuantity - Quantity,
+            set_product_quantity(IdProduct,NewQuantity),
+            write('\t'),
+            write('Commande client en attente effectuée concernant le produit "['),
+            write(IdProduct),
+            write('] '),
+            write(Name),
+            write('" pour une quantité de '),
+            write(Quantity),
+            write(' au bout de '),
+            write(NbrDays),
+            write(' jours.'),nl,
+            retract(waiting_order(IdProduct,_,_))
+            ;
+            retract(waiting_order(IdProduct,Quantity,NbrDays)),
+            NewNbrDays is NbrDays+1,
+            asserta(waiting_order(IdProduct,Quantity,NewNbrDays)),
+            write('\t'),write('Commande client en attente non réalisable.'),nl
+            )
+        )
+    ).
+/*
+    Random order + (if stock is ok then decrease stock else addition in waiting_list) + Best supplier research + create new delivery
 */
 
-:- dynamic(supplierTmp/3).
 
 daily_order :-
     random_order(IdProduct,Quantity),
@@ -180,7 +222,8 @@ daily_order :-
         ;
         add_into_waiting_list(IdProduct,Quantity)
     ),
-    find_best_supplier(IdProduct,IdSupplier).
+    find_best_supplier(IdProduct,IdSupplier),
+    create_delivery(IdProduct,Quantity,IdSupplier).
 
 find_best_supplier(IdProduct,IdSupplier):-
     product(IdProduct, _, SupplierList, _),
@@ -219,9 +262,8 @@ supplier_mark_calcul(IdSupplier, Mark):-
     Mark is FiabilityMark*10 + DeliveryMark.
 
 
-:- dynamic(waiting_list/3).
 add_into_waiting_list(IdProduct,Quantity):-
-    asserta(waiting_list(IdProduct,Quantity,0)),
+    asserta(waiting_order(IdProduct,Quantity,0)),
     write('Stock insuffisant, mise en attente de la commande'),nl.
 
 
@@ -237,7 +279,7 @@ random_order(IdProduct, Quantity) :-
     random(1,61,IdProduct),
     random(20,81,Quantity),
     product(IdProduct,Name,_,_),
-    write('Commande du produit "['),write(IdProduct),write('] '),write(Name),write('" pour une quantité de '), write(Quantity),write('.'),nl.
+    write('"Commande client" du produit "['),write(IdProduct),write('] '),write(Name),write('" pour une quantité de '), write(Quantity),write('.'),nl.
 
 random_event(IdEvent, AxisX, AxisY):-
     random(1,21,IdEvent),
@@ -403,7 +445,7 @@ create_delivery(IdProduct,Quantity,IdSupplier):-
 	NewNbr is Nbr + 1,
 	asserta(nbr_deliveries_sent(NewNbr)),
 	asserta(delivery(NewNbr,IdSupplier,IdProduct,Quantity,LatitudeSupplier,LongitudeSupplier,Dist)),
-	write('Création d une nouvelle commande'),
+	write('Création d une nouvelle "commande fournisseur"'),nl,
 	write('\t'),write('Libelle du produit : '),write(NameProduct),nl,
 	write('\t'),write('Quantite : '),write(Quantity),nl,
 	write('\t'),write('Fournisseur : '),write(NameSupplier),nl,
