@@ -301,8 +301,6 @@ product_availability(IdProduct,QuantityAsked):-
 	product(IdProduct,_,_,Quantity),
 	QuantityAsked =< Quantity.
 
-%replenishment(ID_Product):-!.
-
 
 /**********************EVENT******************************/
 
@@ -316,7 +314,7 @@ impact_event(Latitude,Longitude,IdEvent):-
 	forall(supplier(IdSupplier,_,_,_),
 	 		(supplier_impacted_by_event(Latitude,Longitude,IdEvent,IdSupplier),!,
 	 			impact_supplier(IdSupplier,Impact);!)),
-	forall(delivery(IdDelivery,_,_,_,_,_,_),
+	forall(delivery(IdDelivery,_,_,_,_,_,_,_),
 			(delivery_impacted_by_event(Latitude,Longitude,IdEvent,IdDelivery),!,
 	 			impact_delivery(IdDelivery,Impact);!)).
 
@@ -328,7 +326,7 @@ supplier_impacted_by_event(LatitudeEvent,LongitudeEvent,IdEvent,IdSupplier):-
 	Dist =< Radius.
 
 delivery_impacted_by_event(LatitudeEvent,LongitudeEvent,IdEvent,IdDelivery):-
-	delivery(IdDelivery,_,_,_,LatitudeDelivery,LongitudeDelivery,_),
+	delivery(IdDelivery,_,_,_,LatitudeDelivery,LongitudeDelivery,_,_),
 	event(IdEvent,_,_,Radius),
 	distance(LatitudeEvent,LongitudeEvent,LatitudeDelivery,LongitudeDelivery,Dist),
 	Dist =< Radius.
@@ -342,50 +340,55 @@ impact_supplier(IdSupplier,Impact):-
 	set_supplier_mark(IdSupplier,NewMark).
 
 impact_delivery(IdDelivery,Impact):-
-	delivery(IdDelivery,_,_,_,_,_,Time),
-	NewTime is Time + Impact,
-	set_delivery_time(IdDelivery,NewTime),
+	delivery(IdDelivery,_,_,_,_,_,_,Downtime),
+	NewDowntime is Downtime + Impact,
+	set_delivery_downtime(IdDelivery,NewDowntime),
 	write('La commande N° '),write(IdDelivery),write(' a été impacté par l évènement.'),nl,
-	write('Elle sera retardé de '), write(Impact), write(" Jours."),nl.
+	write('Elle sera immobilisé pendant '), write(Impact), write(" jours."),nl.
 
 
 /*********************DELIVERY**************************/
 
 
 display_delivery(IdDelivery):-
-	delivery(IdDelivery,IdSupplier,IdProduct,Quantity,_,_,Time),
+	delivery(IdDelivery,IdSupplier,IdProduct,Quantity,_,_,Time,Downtime),
 	product(IdProduct,NameProduct,_,_),
 	supplier(IdSupplier,NameSupplier,_,_),
 	write('Livraison N° '),write(IdDelivery),nl,
 	write('\t'),write('Libelle Produit : '),write(NameProduct),nl,
 	write('\t'),write('Quantite : '),write(Quantity),nl,
 	write('\t'),write('Fournisseur : '),write(NameSupplier),nl,
-	write('\t'),write('Temps d acheminement restant : '),write(Time),nl.
+	write('\t'),write('Temps d acheminement restant : '),write(Time),nl,
+	(Downtime > 0
+		-> 	write('\t'),write('Temps d immobilisation : '),write(Downtime),write(' jours'),nl;!).
 
 
 
 
 advancement_deliveries:-
-	forall(delivery(IdDelivery,_,_,_,_,_,_),
+	forall(delivery(IdDelivery,_,_,_,_,_,_,_),
 		(move_delivery(IdDelivery),
-		delivery(IdDelivery,_,IdProduct,_,_,_,0),!,
+		delivery(IdDelivery,_,IdProduct,_,_,_,0,_),!,
 			delivery_made(IdDelivery),
 			write('La livraison N° '),write(IdDelivery),write(' est arrivé.'),nl,
 			product(IdProduct,NameProduct,_,Quantity),
 			write('Le stock de produit  '),write(NameProduct),write(' est maintenant de '), write(Quantity),nl;!)).
 
 move_delivery(IdDelivery):-
-	delivery(IdDelivery,_,_,_,Latitude,_,Time),
+	delivery(IdDelivery,_,_,_,Latitude,_,Time,Downtime),
+	(Downtime > 0
+		-> NewDowntime is Downtime - 1, 
+			set_delivery_downtime(IdDelivery,NewDowntime);
 	(Time > 5,!,
 		NewTime is Time - 5;
 		NewTime is 0),
 	set_delivery_time(IdDelivery,NewTime),
 	(Latitude = 50
-	->change_longitude(IdDelivery, 5);
-	change_latitude(IdDelivery,5)).
+		-> change_longitude(IdDelivery, 5);
+	change_latitude(IdDelivery,5))).
 
 change_latitude(IdDelivery, Movement):-
-	delivery(IdDelivery,_,_,_,Latitude,_,_),
+	delivery(IdDelivery,_,_,_,Latitude,_,_,_),
 	(Latitude > 45, Latitude < 55
 		->
 		MovementOnLongitude is Movement - abs(Latitude - 50),
@@ -402,7 +405,7 @@ change_latitude(IdDelivery, Movement):-
 		set_delivery_latitude(IdDelivery,NewLatitude);!).
 
 change_longitude(IdDelivery, Movement):-
-	delivery(IdDelivery,_,_,_,_,Longitude,_),
+	delivery(IdDelivery,_,_,_,_,Longitude,_,_),
 	(Longitude > 45, Longitude < 55
 		->
 		NewLongitude is 50,
@@ -418,23 +421,27 @@ change_longitude(IdDelivery, Movement):-
 
 
 delivery_made(IdDelivery):-
-	delivery(IdDelivery,_,Idproduct,QuantityDelivered,_,_,_),
+	delivery(IdDelivery,_,Idproduct,QuantityDelivered,_,_,_,_),
 	get_quantity(Idproduct,ProductQuantity),
 	NewQuantity is QuantityDelivered + ProductQuantity,
 	set_product_quantity(Idproduct,NewQuantity),
-	retract(delivery(IdDelivery,_,_,_,_,_,_)).
+	retract(delivery(IdDelivery,_,_,_,_,_,_,_)).
 
 set_delivery_latitude(IdDelivery,Latitude):-
-	retract(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,_,Longitude,Time)),
-	asserta(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,Longitude,Time)).
+	retract(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,_,Longitude,Time,Downtime)),
+	asserta(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,Longitude,Time,Downtime)).
 
 set_delivery_longitude(IdDelivery,Longitude):-
-	retract(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,_,Time)),
-	asserta(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,Longitude,Time)).	
+	retract(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,_,Time,Downtime)),
+	asserta(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,Longitude,Time,Downtime)).	
 
 set_delivery_time(IdDelivery,Time):-
-	retract(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,Longitude,_)),
-	asserta(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,Longitude,Time)).
+	retract(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,Longitude,_,Downtime)),
+	asserta(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,Longitude,Time,Downtime)).
+
+set_delivery_downtime(IdDelivery,Downtime):-
+	retract(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,Longitude,Time,_)),
+	asserta(delivery(IdDelivery,IdSupplier,IdProduct,Quantity,Latitude,Longitude,Time,Downtime)).
 
 create_delivery(IdProduct,Quantity,IdSupplier):-
 	supplier(IdSupplier,NameSupplier,[LatitudeSupplier|LongitudeSupp],_),
@@ -444,8 +451,8 @@ create_delivery(IdProduct,Quantity,IdSupplier):-
 	retract(nbr_deliveries_sent(Nbr)),
 	NewNbr is Nbr + 1,
 	asserta(nbr_deliveries_sent(NewNbr)),
-	asserta(delivery(NewNbr,IdSupplier,IdProduct,Quantity,LatitudeSupplier,LongitudeSupplier,Dist)),
-	write('Création d une nouvelle "commande fournisseur"'),nl,
+	asserta(delivery(NewNbr,IdSupplier,IdProduct,Quantity,LatitudeSupplier,LongitudeSupplier,Dist,0)),
+	write('Création d une nouvelle commande'),
 	write('\t'),write('Libelle du produit : '),write(NameProduct),nl,
 	write('\t'),write('Quantite : '),write(Quantity),nl,
 	write('\t'),write('Fournisseur : '),write(NameSupplier),nl,
