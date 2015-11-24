@@ -181,8 +181,8 @@ get_waiting_orders_for_view_rec(EmptyList,ListString):-
 
 day_plus_one(Dialog) :-
     set_new_day(Dialog),
-    %delevery_check,
-    %daily_event,
+    advancement_deliveries,
+    daily_event,
     daily_order,
     check_waiting_list,
     write('--------------------------------------'),
@@ -322,10 +322,10 @@ random_order(IdProduct, Quantity) :-
     product(IdProduct,Name,_,_),
     write('Commande client du produit "['),write(IdProduct),write('] '),write(Name),write('" pour une quantité de '), write(Quantity),write('.'),nl.
 
-random_event(IdEvent, AxisX, AxisY):-
+random_event(IdEvent, Latitude, Longitude):-
     random(1,21,IdEvent),
-    random(0,101,AxisX),
-    random(0,101,AxisY).
+    random(0,101,Latitude),
+    random(0,101,Longitude).
 
 random_coordinates(Latitude,Longitude):-
 	D = 1, F = 51, 
@@ -345,7 +345,11 @@ product_availability(IdProduct,QuantityAsked):-
 
 /**********************EVENT******************************/
 
-impact_event(Latitude,Longitude,IdEvent):-
+daily_event:-
+	random_event(IdEvent, Latitude, Longitude),
+	impact_event(IdEvent, Latitude, Longitude).
+
+impact_event(IdEvent,Latitude,Longitude):-
 	event(IdEvent,NameEvent,Impact,Radius),
 	write('Evenement : '),write(NameEvent),nl,
 	write('\t'),write('Latitude : '),write(Latitude),nl,
