@@ -100,7 +100,7 @@ get_suppliers_for_view(ListString) :-
 get_suppliers_for_view_rec(EmptyList,ListString) :-
     asserta(listTmp(2,EmptyList)),
     forall(
-	    supplier(IdSupplier ,Name, Products, _),
+	    supplier(IdSupplier ,Name, Products, Mark),
 	    (
 	        atomic_concat('[',IdSupplier, A),
 	        atomic_concat(A,'] ', B),
@@ -108,7 +108,9 @@ get_suppliers_for_view_rec(EmptyList,ListString) :-
 	        atomic_concat(C,' - (Coordinates = [', D),
 	        atomic_list_concat(Products,', ', Atom),
 	        atomic_concat(D, Atom, E),
-	        atomic_concat(E,'])', String),
+	        atomic_concat(E,']) - Note: [', F),
+	        atomic_concat(F,Mark, G),
+	        atomic_concat(G,'/10]', String),
             retract(listTmp(2, List)),
             add_into_list(List, String, Return),
             asserta(listTmp(2, Return))
@@ -216,12 +218,31 @@ get_deliveries_for_view_rec(EmptyList,ListString):-
 
 day_plus_one(Dialog) :-
     set_new_day(Dialog),
+    upgrade_suppliers_marks,
     advancement_deliveries,
     daily_event,
     daily_order,
     check_waiting_list,
     write('--------------------------------------'),
     nl.
+
+/*
+    Setting +1 to every suppliers marks
+*/
+upgrade_suppliers_marks:-
+    forall(
+        supplier(IdSupplier,_,_,Mark),
+        (
+            retract(supplier(IdSupplier, Name, Location, Mark)),
+            (
+                Mark < 10
+                ->
+                NewMark is Mark + 1,
+                asserta(supplier(IdSupplier, Name, Location, NewMark));
+                asserta(supplier(IdSupplier, Name, Location, Mark))
+            )
+        )
+    ).
 
 /*
     Days Management
