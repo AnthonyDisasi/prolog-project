@@ -175,6 +175,41 @@ get_waiting_orders_for_view_rec(EmptyList,ListString):-
     ),
     retract(listTmp(2,ListString)).
 
+get_deliveries_for_view(ListString):-
+    get_deliveries_for_view_rec([],ListString).
+
+get_deliveries_for_view_rec(EmptyList,ListString):-
+    asserta(listTmp(2,EmptyList)),
+    (
+        delivery(_, _, _, _, _, _,_, _)
+    ->
+        forall(
+        	    delivery(_, _, IdProduct, Quantity, _, _, Time, Downtime),
+        	    (
+        	        product(IdProduct,Name, _, _),
+        	        atomic_concat('Livraison fournisseur du produit "[',IdProduct, A),
+        	        atomic_concat(A,'] ', B),
+        	        atomic_concat(B, Name, C),
+        	        atomic_concat(C,'" - Qté Commandé = [', D),
+        	        atomic_concat(D, Quantity, E),
+        	        atomic_concat(E,'] - Distance = [', F),
+        	        atomic_concat(F, Time, G),
+        	        atomic_concat(G,']', H),
+        	        atomic_concat(H,' - Nbr jours bloqués restants = [', I),
+        	        atomic_concat(I, Downtime, J),
+        	        atomic_concat(J,']', String),
+        	        retract(listTmp(2, List)),
+                    add_into_list(List, String, Return),
+                    asserta(listTmp(2, Return))
+        	    )
+        	)
+        ;
+        retract(listTmp(2, List)),
+        add_into_list(List, 'Aucune livraison fournisseur en attente', Return),
+        asserta(listTmp(2, Return))
+    ),
+    retract(listTmp(2,ListString)).
+
 /*
     Day Plus One Function
 */
@@ -205,7 +240,7 @@ set_new_day(Dialog) :-
     nl.
 
 /*
-    Check waiting list
+    Waiting list Management
 */
 check_waiting_list:-
     (
@@ -247,6 +282,7 @@ check_waiting_list_rec:-
         )
     ).
 /*
+    Client Orders Management
     Random order + (if stock is ok then decrease stock else addition in waiting_list) + Best supplier research + create new delivery
 */
 
@@ -398,7 +434,7 @@ impact_delivery(IdDelivery,Impact):-
 	NewDowntime is Downtime + Impact,
 	set_delivery_downtime(IdDelivery,NewDowntime),
 	write('La commande fournisseur actuellement en livraison N° '),write(IdDelivery),write(' a été impacté par l évènement.'),nl,
-	write('Elle sera immobilisé pendant '), write(Impact), write(" jours."),nl.
+	write('Elle sera immobilisé pendant '), write(Impact), write(' jours.'),nl.
 
 
 /*********************DELIVERY**************************/

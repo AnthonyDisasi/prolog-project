@@ -14,7 +14,8 @@ start :-
     	send(D, append, button(produits, message(@prolog, open_products_list))),
     	send(D, append, button(fournisseurs, message(@prolog, open_suppliers_list))),
     	send(D, append, button(évènements, message(@prolog, open_events_list))),
-    	send(D, append, button(commandes_en_attente, message(@prolog, open_waiting_list))),
+    	send(D, append, button(commandes_client_en_attente, message(@prolog, open_waiting_list))),
+    	send(D, append, button(commandes_fournisseurs_en_livraison, message(@prolog, open_delivery_list))),
     	send(D, append, button(simulation_journée, message(@prolog, day_plus_one, D))),
     	send(D, append, button(quitter, message(D, destroy))),
     	send(D, open).
@@ -78,3 +79,13 @@ open_waiting_list :-
         send(B, size, size(90,100)),
     	send(B, open).
 
+/*
+    Open Delivery List Window
+*/
+
+open_delivery_list :-
+    	new(B, browser('List')),
+    	get_deliveries_for_view(List),
+        send_list(B, append, List),
+        send(B, size, size(90,100)),
+    	send(B, open).
