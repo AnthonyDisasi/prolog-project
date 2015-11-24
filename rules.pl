@@ -349,6 +349,15 @@ daily_event:-
 	random_event(IdEvent, Latitude, Longitude),
 	impact_event(IdEvent, Latitude, Longitude).
 
+
+/* 
+
+Changer l'affichage des fournisseurs pour un affichage en ligne 
+Rajouter un prédicat dynamique pour savoir si on a un fournisseur impacté du genre
+fournisseur_impactés()
+*/
+
+
 impact_event(IdEvent,Latitude,Longitude):-
 	event(IdEvent,NameEvent,Impact,Radius),
 	write('Evenement : '),write(NameEvent),nl,
@@ -378,7 +387,7 @@ delivery_impacted_by_event(LatitudeEvent,LongitudeEvent,IdEvent,IdDelivery):-
 	 			
 impact_supplier(IdSupplier,Impact):-
 	supplier(IdSupplier,Name,_,Mark),
-	write('Le fournisseur '),write(Name),write(' a ete impacte par l évènement.'),nl,
+	write('Le fournisseur '),write(Name),write(' a été impacté par l évènement.'),nl,
 	(Mark > Impact,!,
 		NewMark is Mark - Impact;
 		NewMark is 0),
