@@ -179,8 +179,8 @@ get_waiting_orders_for_view_rec(EmptyList,ListString):-
     Day Plus One Function
 */
 
-day_plus_one :-
-    set_new_day,
+day_plus_one(Dialog) :-
+    set_new_day(Dialog),
     %delevery_check,
     %daily_event,
     daily_order,
@@ -192,10 +192,15 @@ day_plus_one :-
     Days Management
 */
 
-set_new_day :-
+set_new_day(Dialog) :-
     retract(context(OldNumDay)),
     NewNumDay is OldNumDay + 1,
     asserta(context(NewNumDay)),
+
+    get(Dialog, member('stringday'), Output),
+    atomic_concat('','Jour ',StringTmp),
+    atomic_concat(StringTmp, NewNumDay, StringDay),
+    send(Output, selection, StringDay),
     write('Changement de jour: '),write(NewNumDay),
     nl.
 
