@@ -11,11 +11,12 @@ start :-
     	send(D, append, new(StringDay, label(''))),
     	send(StringDay, colour, black),
         send(StringDay, font, font(times, bold, 18)),
-    	send(D, append, button(products, message(@prolog, open_products_list))),
-    	send(D, append, button(suppliers, message(@prolog, open_suppliers_list))),
-    	send(D, append, button(events, message(@prolog, open_events_list))),
-    	send(D, append, button(day_plus_one, message(@prolog, day_plus_one))),
-    	send(D, append, button(close_window, message(D, destroy))),
+    	send(D, append, button(produits, message(@prolog, open_products_list))),
+    	send(D, append, button(fournisseurs, message(@prolog, open_suppliers_list))),
+    	send(D, append, button(évènements, message(@prolog, open_events_list))),
+    	send(D, append, button(commandes_en_attente, message(@prolog, open_waiting_list))),
+    	send(D, append, button(simulation_journée, message(@prolog, day_plus_one))),
+    	send(D, append, button(quitter, message(D, destroy))),
     	send(D, open).
 
 
@@ -66,5 +67,14 @@ open_events_list :-
         send(B, size, size(50,100)),
     	send(B, open).
 
+/*
+    Open Waiting List Window
+*/
 
+open_waiting_list :-
+    	new(B, browser('List')),
+    	get_waiting_orders_for_view(List),
+        send_list(B, append, List),
+        send(B, size, size(85,100)),
+    	send(B, open).
 

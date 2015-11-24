@@ -139,6 +139,42 @@ get_events_for_view_rec(EmptyList,ListString) :-
 	),
 	retract(listTmp(2,ListString)).
 
+
+get_waiting_orders_for_view(ListString):-
+    get_waiting_orders_for_view_rec([],ListString).
+
+get_waiting_orders_for_view_rec(EmptyList,ListString):-
+    asserta(listTmp(2,EmptyList)),
+    (
+        waiting_order(_,_,_)
+    ->
+        forall(
+        	    waiting_order(IdProduct ,Quantity, NbrDays),
+        	    (
+        	        product(IdProduct,Name,_,QuantityRemaining),
+        	        atomic_concat('Produit "[',IdProduct, A),
+        	        atomic_concat(A,'] ', B),
+        	        atomic_concat(B, Name, C),
+        	        atomic_concat(C,'" - Qté Commandé = [', D),
+        	        atomic_concat(D, Quantity, E),
+        	        atomic_concat(E,'] - Qté en stock = [', F),
+        	        atomic_concat(F, QuantityRemaining, G),
+        	        atomic_concat(G,']', H),
+        	        atomic_concat(H,' - Nbr jours en attente = [', I),
+        	        atomic_concat(I, NbrDays, J),
+        	        atomic_concat(J,']', String),
+        	        retract(listTmp(2, List)),
+                    add_into_list(List, String, Return),
+                    asserta(listTmp(2, Return))
+        	    )
+        	)
+        ;
+        retract(listTmp(2, List)),
+        add_into_list(List, 'Aucune commande en attente', Return),
+        asserta(listTmp(2, Return))
+    ),
+    retract(listTmp(2,ListString)).
+
 /*
     Day Plus One Function
 */
@@ -452,7 +488,7 @@ create_delivery(IdProduct,Quantity,IdSupplier):-
 	NewNbr is Nbr + 1,
 	asserta(nbr_deliveries_sent(NewNbr)),
 	asserta(delivery(NewNbr,IdSupplier,IdProduct,Quantity,LatitudeSupplier,LongitudeSupplier,Dist,0)),
-	write('Création d une nouvelle commande'),
+	write('Création d une nouvelle commande'),nl,
 	write('\t'),write('Libelle du produit : '),write(NameProduct),nl,
 	write('\t'),write('Quantite : '),write(Quantity),nl,
 	write('\t'),write('Fournisseur : '),write(NameSupplier),nl,
