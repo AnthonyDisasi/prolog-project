@@ -170,7 +170,7 @@ get_waiting_orders_for_view_rec(EmptyList,ListString):-
         	)
         ;
         retract(listTmp(2, List)),
-        add_into_list(List, 'Aucune commande en attente', Return),
+        add_into_list(List, 'Aucune commande client en attente', Return),
         asserta(listTmp(2, Return))
     ),
     retract(listTmp(2,ListString)).
@@ -211,9 +211,9 @@ check_waiting_list:-
     (
     waiting_order(_,_,_)
     ->
-    write('Vérification des "commandes clients" en attentes.'),nl,check_waiting_list_rec
+    write('Vérification des commandes clients en attentes.'),nl,check_waiting_list_rec
     ;
-    write('Aucune "commande client" en attente.'),nl
+    write('Aucune commande client en attente.'),nl
     ).
 
 
@@ -270,7 +270,7 @@ find_best_supplier(IdProduct,IdSupplier):-
     product(IdProduct, _, SupplierList, _),
     get_best_supplier(SupplierList, IdSupplier),
     supplier(IdSupplier, Name, _, _),
-    write('Le fournisseur "['),write(IdSupplier),write('] '),write(Name),write('" a été choisi pour cette commande.'),nl.
+    write('Le fournisseur "['),write(IdSupplier),write('] '),write(Name),write('" a été choisi pour cette commande client.'),nl.
 
 get_best_supplier([X|L],IdSupplier):-
     supplier_mark_calcul(X,Mark),
@@ -305,7 +305,7 @@ supplier_mark_calcul(IdSupplier, Mark):-
 
 add_into_waiting_list(IdProduct,Quantity):-
     asserta(waiting_order(IdProduct,Quantity,0)),
-    write('Stock insuffisant, mise en attente de la commande'),nl.
+    write('Stock insuffisant, mise en attente de la commande client'),nl.
 
 
 
@@ -320,7 +320,7 @@ random_order(IdProduct, Quantity) :-
     random(1,61,IdProduct),
     random(20,81,Quantity),
     product(IdProduct,Name,_,_),
-    write('"Commande client" du produit "['),write(IdProduct),write('] '),write(Name),write('" pour une quantité de '), write(Quantity),write('.'),nl.
+    write('Commande client du produit "['),write(IdProduct),write('] '),write(Name),write('" pour une quantité de '), write(Quantity),write('.'),nl.
 
 random_event(IdEvent, AxisX, AxisY):-
     random(1,21,IdEvent),
@@ -384,7 +384,7 @@ impact_delivery(IdDelivery,Impact):-
 	delivery(IdDelivery,_,_,_,_,_,_,Downtime),
 	NewDowntime is Downtime + Impact,
 	set_delivery_downtime(IdDelivery,NewDowntime),
-	write('La commande N° '),write(IdDelivery),write(' a été impacté par l évènement.'),nl,
+	write('La commande fournisseur actuellement en livraison N° '),write(IdDelivery),write(' a été impacté par l évènement.'),nl,
 	write('Elle sera immobilisé pendant '), write(Impact), write(" jours."),nl.
 
 
@@ -493,7 +493,7 @@ create_delivery(IdProduct,Quantity,IdSupplier):-
 	NewNbr is Nbr + 1,
 	asserta(nbr_deliveries_sent(NewNbr)),
 	asserta(delivery(NewNbr,IdSupplier,IdProduct,Quantity,LatitudeSupplier,LongitudeSupplier,Dist,0)),
-	write('Création d une nouvelle commande'),nl,
+	write('Création d une nouvelle commande fournisseur'),nl,
 	write('\t'),write('Libelle du produit : '),write(NameProduct),nl,
 	write('\t'),write('Quantite : '),write(Quantity),nl,
 	write('\t'),write('Fournisseur : '),write(NameSupplier),nl,
