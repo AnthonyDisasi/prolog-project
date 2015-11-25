@@ -21,7 +21,7 @@ consults:-
     Statistics predicate 'stats'
     Return = printing some statistics in console log
 */
-stats:-
+statistics:-
     consults,
     set_context_statistics,
     make_simulation,
@@ -41,7 +41,7 @@ stats:-
 :-dynamic(supplier_average/2).
 
 set_context_statistics:-
-    asserta(test_nbr_loops(1,100)),
+    asserta(test_nbr_loops(1,1000)),
     asserta(days_with_waiting_orders_tmp(1,0)),
     asserta(average_waiting_order_tmp(1,0)),
     init_suppliers.
@@ -60,7 +60,7 @@ init_suppliers:-
 make_simulation:-
 	stats_rec(0).
 
-stats_rec(100):-!.
+stats_rec(1000):-!.
 stats_rec(X):-
 	day_plus_one,
     waiting_list_stats,
@@ -130,6 +130,12 @@ suppliers_stats:-
 */
 print_statistics:-
     nl,write('------------------------------------'),nl,
+    print_waiting_list_stats,
+    print_suppliers_stats.
+    %print_delivery_stats,
+    %print_products_stats.
+
+print_waiting_list_stats:-
     write('Statistiques concernant les commandes client en attente:'),nl,
     days_with_waiting_orders_tmp(1,NbrDays),
     test_nbr_loops(1,NbrLoops),
@@ -138,24 +144,16 @@ print_statistics:-
     average_waiting_order_tmp(1,Addition),
     Average is Addition / NbrLoops,
     write('\t'),write('--> Nombre moyen de commandes en attente est de: ['),write(Addition),write('/'),write(NbrLoops),write('] - Par jour: ['),write(Average),write('/j]'),nl,
-    write('**'),nl,
+    write('**'),nl.
 
-
-
+print_suppliers_stats:-
     write('Statistiques concernant les fournisseurs:'),nl,
-
     get_best_low_average_supplier_statistics(IdBestSupplier,BestMark,IdLowestSupplier,LowestMark,AverageSupplierMark),
     write('\t'),write('--> Note de fiabilité fournisseur la plus haute: [Id Fourn][Moy/10] = ['),write(IdBestSupplier),write('] ['),write(BestMark),write('/10]'),nl,
     write('\t'),write('--> Note de fiabilité fournisseur la plus basse: [Id Fourn][Moy/10] = ['),write(IdLowestSupplier),write('] ['),write(LowestMark),write('/10]'),nl,
     write('\t'),write('--> Moyenne des notes de fiabilité fournisseur: [Note/10] = ['),write(AverageSupplierMark),write('/10]'),nl,
-    write('**'),nl,
+    write('**'),nl.
 
-
-
-
-    write('Statistiques concernant les livraisons des fournisseurs:'),nl,
-    write('**'),nl,
-    write('Statistiques concernant les produits:'),nl.
 
 :-dynamic(best_supplier/3).
 :-dynamic(lowest_supplier/3).
@@ -169,7 +167,6 @@ get_best_low_average_supplier_statistics(IdBestSupplier,BestMark,IdLowestSupplie
         supplier_average(IdSupplier,AdditionFinal)
         ,
         (
-            write(AdditionFinal),nl,
             best_supplier(1,_, BestMarkTmp),
             (
                 AdditionFinal > BestMarkTmp
@@ -197,5 +194,4 @@ get_best_low_average_supplier_statistics(IdBestSupplier,BestMark,IdLowestSupplie
     test_nbr_loops(1,NbrLoops),
     BestMark is BestAddition / NbrLoops,
     LowestMark is LowestAddition / NbrLoops,
-    write(AverageTmp),nl,
     Average is AverageTmp / (49 * NbrLoops).
