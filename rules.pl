@@ -5,6 +5,7 @@
 :- dynamic(bool_suppliers_impacted/0).
 :- dynamic(bool_deliveries_impacted/0).
 :- dynamic(bool_deliveries_made/0).
+:- dynamic(delivery/8).
 
 
 /*

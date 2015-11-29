@@ -1,7 +1,6 @@
 :- dynamic(product/4).
 :- dynamic(supplier/4).
 :- dynamic(event/4).
-:- dynamic(delivery/8).
 :- dynamic(nbr_deliveries_sent/1).
 
 
