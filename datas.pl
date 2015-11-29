@@ -166,11 +166,8 @@ event(20, bouchons, 1, 10).
 
 
 /*
-	Delivery
-delivery(id, idSupplier, idProduct, Quantity, latitude, longitude,time, downtime).
+nbr_deliveries_sent(Number).
 */
-
-%delivery(1,1,1,20,43,67,24,5).
 
 nbr_deliveries_sent(0).
 
